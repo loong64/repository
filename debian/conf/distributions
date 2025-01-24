@@ -1,0 +1,8 @@
+Origin: Debian
+Label: Debian
+Suite: stable
+Codename: trixie
+Architectures: loong64 source
+Components: main
+Description: Debian Released
+SignWith: yes
