@@ -80,8 +80,8 @@ jobs:
           apt-ftparchive release . > Release
           # gpg --clearsign -o InRelease Release
           # gpg -abs -o Release.gpg Release
-          gpg --default-key "${KEYGRIP}" --batch --pinentry-mode="loopback" --passphrase="${{ secrets.PASSPHRASE }}" -abs -o - Release > Release.gpg
-          gpg --default-key "${KEYGRIP}" --batch --pinentry-mode="loopback" --passphrase="${{ secrets.PASSPHRASE }}" --clearsign -o - Release > InRelease
+          gpg --default-key "${{ steps.import_gpg.outputs.keyid }}" --batch --pinentry-mode="loopback" --passphrase="${{ secrets.PASSPHRASE }}" -abs -o - Release > Release.gpg
+          gpg --default-key "${{ steps.import_gpg.outputs.keyid }}" --batch --pinentry-mode="loopback" --passphrase="${{ secrets.PASSPHRASE }}" --clearsign -o - Release > InRelease
 
       - name: Push changes
         if: env.push == 'true'
