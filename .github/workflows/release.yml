@@ -1,0 +1,96 @@
+name: Update Repository
+
+on:
+  schedule:
+     - cron: '0 17 * * *'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env: 
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+
+      - name: Prepare scripts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y reprepro gnupg-agent
+          mkdir -p dist debian/dists debian/pool ~/.gnupg
+
+          echo > ~/.gnupg/gpg-agent.conf <<EOF
+          max-cache-ttl 60480000
+          default-cache-ttl 60480000
+          allow-preset-passphrase
+          EOF
+          gpg-connect-agent reloadagent /bye
+
+      - name: Check gh-cli packages
+        run: |
+          version=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | jq -r ".tag_name")
+          if [ -z "$version" ] || [ "$version" == "null" ]; then
+            echo "Failed to get gh-cli version"
+            exit 1
+          fi
+          if ! cat debian/dists/trixie/main/binary-loong64/Packages | grep -A1 "^Package: gh$" | grep -q "${version/v/}"; then
+            gh release download ${version} -p '*loong64.deb' --dir dist --repo loong64/cli || exit 0
+            echo "push=true" >> $GITHUB_ENV
+          fi
+
+      - name: Check docker-ce packages
+        run: |
+          version=$(curl -s "https://api.github.com/repos/moby/moby/releases/latest" | jq -r ".tag_name")
+          if [ -z "$version" ] || [ "$version" == "null" ]; then
+            echo "Failed to get docker-ce version"
+            exit 1
+          fi
+          if ! cat debian/dists/trixie/main/binary-loong64/Packages | grep -A1 "^Package: docker-ce$" | grep -q "${version/v/}"; then
+            gh release download ${version} -p '*.deb' --dir dist --repo loong64/docker-ce-packaging || exit 0
+            echo "push=true" >> $GITHUB_ENV
+          fi
+
+      - name: Check containerd.io packages
+        run: |
+          version=v$(curl -sSL https://github.com/docker/containerd-packaging/raw/main/debian/changelog | head -n 1 | grep -oP '\(\K[^\)]+' | cut -d'-' -f1)
+          if [ -z "$version" ] || [ "$version" == "null" ]; then
+            echo "Failed to get containerd.io version"
+            exit 1
+          fi
+          if ! cat debian/dists/trixie/main/binary-loong64/Packages | grep -A1 "^Package: containerd.io$" | grep -q "${version/v/}"; then
+            gh release download ${version} -p '*.deb' --dir dist --repo loong64/containerd-packaging || exit 0
+            echo "push=true" >> $GITHUB_ENV
+          fi
+
+      - name: Update repository
+        if: env.push == 'true'
+        run: |
+          KEYGRIP=$(gpg -K --with-keygrip | grep Keygrip | head -1 | awk '{print $3}')
+          /usr/lib/gnupg2/gpg-preset-passphrase --preset "$KEYGRIP" <<< "${{ secrets.PASSPHRASE }}"
+          reprepro -Vb debian includedeb trixie dist/*.deb
+
+          cd debian/dists/trixie/main
+          apt-ftparchive release . > Release
+          # gpg --clearsign -o InRelease Release
+          # gpg -abs -o Release.gpg Release
+          gpg --default-key "${{ steps.import_gpg.outputs.keyid }}" --batch --pinentry-mode="loopback" --passphrase="${{ secrets.PASSPHRASE }}" -abs -o - Release > Release.gpg
+          gpg --default-key "${{ steps.import_gpg.outputs.keyid }}" --batch --pinentry-mode="loopback" --passphrase="${{ secrets.PASSPHRASE }}" --clearsign -o - Release > InRelease
+
+      - name: Push changes
+        if: env.push == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan temp_branch
+          git add .
+          git commit -m "feat: Repository snapshot $(date +%Y-%m-%d)"
+          git branch -D master || true
+          git branch -m master
+          git push -f origin master
