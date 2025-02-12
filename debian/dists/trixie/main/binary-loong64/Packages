@@ -1,0 +1,178 @@
+Package: containerd.io
+Version: 1.7.25-1
+Architecture: loong64
+Maintainer: Containerd team <help@containerd.io>
+Installed-Size: 96035
+Depends: libc6 (>= 2.40), libseccomp2 (>= 2.5.0)
+Conflicts: containerd, runc
+Replaces: containerd, runc
+Provides: containerd, runc
+Homepage: https://containerd.io
+Priority: optional
+Section: devel
+Filename: pool/main/c/containerd.io/containerd.io_1.7.25-1_loong64.deb
+Size: 21929192
+SHA256: 42f63a1b68cd00b8e02e92c0065faeba05d8315221d7774d9415cd1920fe953a
+SHA1: 90705e622b7c7c544eebb77cfef6cf87d1f2a18b
+MD5sum: 95ddd07358d488b655e7207717ce62d8
+Description: An open and reliable container runtime
+
+Package: containerd.io-dbgsym
+Source: containerd.io
+Version: 1.7.25-1
+Auto-Built-Package: debug-symbols
+Architecture: loong64
+Maintainer: Containerd team <help@containerd.io>
+Installed-Size: 12547
+Depends: containerd.io (= 1.7.25-1)
+Priority: optional
+Section: debug
+Filename: pool/main/c/containerd.io/containerd.io-dbgsym_1.7.25-1_loong64.deb
+Size: 3076860
+SHA256: e94c37dd1229d3e2291ad2a40ee5463c277db32b6b2fde9f2ee9acc9930111d2
+SHA1: 2c1cfedd97476cfbfeabed2629fd6f794e9d1932
+MD5sum: aed7b0ae8c6b727d8f406528cdbdebaf
+Description: debug symbols for containerd.io
+Build-Ids: 8e3b1fd357f65a4e30148adbfd0de138b0b2cee8
+
+Package: docker-buildx-plugin
+Source: docker-ce (5:27.5.1-1~debian.13~trixie)
+Version: 0.20.1-1~debian.13~trixie
+Architecture: loong64
+Maintainer: Docker <support@docker.com>
+Installed-Size: 90411
+Enhances: docker-ce-cli
+Replaces: docker-ce-cli
+Homepage: https://github.com/docker/buildx
+Priority: optional
+Section: admin
+Filename: pool/main/d/docker-ce/docker-buildx-plugin_0.20.1-1~debian.13~trixie_loong64.deb
+Size: 30729492
+SHA256: cd92f1d2d43ab1664a05641cefbdbf3c929b588ff7a4b18e873e2e315c969a2d
+SHA1: 69f3472dfd383167c69a81821ef8e6f032e72cae
+MD5sum: 38e1d549c7e97a7b23213d7b55545506
+Description: Docker Buildx cli plugin.
+
+Package: docker-ce
+Version: 5:27.5.1-1~debian.13~trixie
+Architecture: loong64
+Maintainer: Docker <support@docker.com>
+Installed-Size: 79970
+Depends: containerd.io (>= 1.6.24), docker-ce-cli, iptables, libc6 (>= 2.40), libsystemd0
+Recommends: apparmor, ca-certificates, docker-ce-rootless-extras, git, kmod, libltdl7, pigz, procps, xz-utils
+Suggests: cgroupfs-mount | cgroup-lite
+Conflicts: docker (<< 1.5~), docker-engine, docker.io
+Replaces: docker-engine
+Homepage: https://www.docker.com
+Priority: optional
+Section: admin
+Filename: pool/main/d/docker-ce/docker-ce_27.5.1-1~debian.13~trixie_loong64.deb
+Size: 16123824
+SHA256: f0478267f1935b931a78ad33b736ba37f463694becc0339710837af7527cb68b
+SHA1: d9a72171425b4d3a1e42fdf41353693d9dc2baaa
+MD5sum: 6bdb9cb25f36f93b6018ca893a139ecc
+Description: Docker: the open-source application container engine
+ Docker is a product for you to build, ship and run any application as a
+ lightweight container
+ .
+ Docker containers are both hardware-agnostic and platform-agnostic. This means
+ they can run anywhere, from your laptop to the largest cloud compute instance and
+ everything in between - and they don't require you to use a particular
+ language, framework or packaging system. That makes them great building blocks
+ for deploying and scaling web apps, databases, and backend services without
+ depending on a particular stack or provider.
+
+Package: docker-ce-cli
+Source: docker-ce
+Version: 5:27.5.1-1~debian.13~trixie
+Architecture: loong64
+Maintainer: Docker <support@docker.com>
+Installed-Size: 38932
+Recommends: docker-buildx-plugin, docker-compose-plugin
+Conflicts: docker (<< 1.5~), docker-engine, docker.io
+Breaks: docker-ce (<< 5:0)
+Replaces: docker-ce (<< 5:0)
+Homepage: https://www.docker.com
+Priority: optional
+Section: admin
+Filename: pool/main/d/docker-ce/docker-ce-cli_27.5.1-1~debian.13~trixie_loong64.deb
+Size: 14853136
+SHA256: de197f2cff941025a751620b0d350026eeadb0776245dc9544803fb2f51aefa0
+SHA1: 550cbd0852384859ccb20c64e20b9a1a202d48ba
+MD5sum: 264bbdd3a477a9a4503c36c995bcdb6a
+Description: Docker CLI: the open-source application container engine
+ Docker is a product for you to build, ship and run any application as a
+ lightweight container
+ .
+ Docker containers are both hardware-agnostic and platform-agnostic. This means
+ they can run anywhere, from your laptop to the largest cloud compute instance and
+ everything in between - and they don't require you to use a particular
+ language, framework or packaging system. That makes them great building blocks
+ for deploying and scaling web apps, databases, and backend services without
+ depending on a particular stack or provider.
+
+Package: docker-ce-rootless-extras
+Source: docker-ce
+Version: 5:27.5.1-1~debian.13~trixie
+Architecture: loong64
+Maintainer: Docker <support@docker.com>
+Installed-Size: 13139
+Depends: dbus-user-session, libc6 (>= 2.40)
+Recommends: slirp4netns (>= 0.4.0)
+Enhances: docker-ce
+Conflicts: rootlesskit
+Breaks: rootlesskit
+Replaces: rootlesskit
+Homepage: https://docs.docker.com/engine/security/rootless/
+Priority: optional
+Section: admin
+Filename: pool/main/d/docker-ce/docker-ce-rootless-extras_27.5.1-1~debian.13~trixie_loong64.deb
+Size: 5492384
+SHA256: 445ce4c39109912e519296be8625af5e7982a215171f37ae97b11656b8a6177d
+SHA1: 09462ea22783674bed3ff0b3219ad74ec8d324b2
+MD5sum: 99460236f29287e60cd3ab3db5fd51df
+Description: Rootless support for Docker.
+  Use dockerd-rootless.sh to run the daemon.
+  Use dockerd-rootless-setuptool.sh to setup systemd for dockerd-rootless.sh .
+  This package contains RootlessKit, but does not contain VPNKit.
+  Either VPNKit or slirp4netns (>= 0.4.0) needs to be installed separately.
+
+Package: docker-compose-plugin
+Source: docker-ce (5:27.5.1-1~debian.13~trixie)
+Version: 2.32.4-1~debian.13~trixie
+Architecture: loong64
+Maintainer: Docker <support@docker.com>
+Installed-Size: 62815
+Enhances: docker-ce-cli
+Homepage: https://github.com/docker/compose
+Priority: optional
+Section: admin
+Filename: pool/main/d/docker-ce/docker-compose-plugin_2.32.4-1~debian.13~trixie_loong64.deb
+Size: 11196328
+SHA256: 15840b6d818726ffca5e7885553ca28f8b5101a8bc6762973efebfa969ccce33
+SHA1: 8458495a2688bdd3ccfeb71bf478e3306e14844a
+MD5sum: 8f793e95bfe4ab7f7775950d1778d2b9
+Description: Docker Compose (V2) plugin for the Docker CLI.
+ .
+ This plugin provides the 'docker compose' subcommand.
+ .
+ The binary can also be run standalone as a direct replacement for
+ Docker Compose V1 ('docker-compose').
+
+Package: gh
+Version: 2.67.0
+Architecture: loong64
+License: MIT
+Maintainer: GitHub
+Installed-Size: 42168
+Depends: git
+Homepage: https://github.com/cli/cli
+Priority: optional
+Section: 
+Filename: pool/main/g/gh/gh_2.67.0_loong64.deb
+Size: 12462658
+SHA256: 1dceaa945715ee045cd880749e58d1c9bc638f469eeb860b8898da218cf3ca30
+SHA1: 6142b4965abe39d8729acf9959220556de04071a
+MD5sum: 6e84dc26ea6e759c19eba84c23f8bd16
+Description: GitHub’s official command line tool.
+
